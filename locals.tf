@@ -3,4 +3,6 @@
 ##-----------------------------------------------------------------------------
 locals {
   label_order = var.label_order
+    subnet = var.subnets
+  name   = var.name
 }

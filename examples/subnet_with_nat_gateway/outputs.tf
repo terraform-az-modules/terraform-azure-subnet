@@ -43,6 +43,32 @@ output "resource_group_location" {
 }
 
 ##-----------------------------------------------------------------------------
+## Public IP
+##-----------------------------------------------------------------------------
+output "public_ip_addresses" {
+  value       = module.subnets.public_ip_addresses
+  description = "The IP address value that was allocated."
+}
+
+output "public_ip_ids" {
+  value       = module.subnets.public_ip_ids
+  description = " The ID of this Public IP."
+}
+
+##-----------------------------------------------------------------------------
+## Net Gateway
+##-----------------------------------------------------------------------------
+output "nat_gateway_ids" {
+  value       = module.subnets.nat_gateway_ids
+  description = "Map of NAT Gateway names to their IDs."
+}
+
+output "subnet_nat_gateway_association_ids" {
+  value       = module.subnets.subnet_nat_gateway_association_ids
+  description = "Map of subnet names to their NAT gateway association resource IDs."
+}
+
+##-----------------------------------------------------------------------------
 ## Tags
 ##-----------------------------------------------------------------------------
 output "tags" {

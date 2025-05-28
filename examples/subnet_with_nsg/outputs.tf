@@ -43,6 +43,14 @@ output "resource_group_location" {
 }
 
 ##-----------------------------------------------------------------------------
+## Nsg association
+##-----------------------------------------------------------------------------
+output "subnet_nsg_association_ids" {
+  value       = module.network_security_group.id
+  description = "Map of subnet names to their NAT gateway association resource IDs."
+}
+
+##-----------------------------------------------------------------------------
 ## Tags
 ##-----------------------------------------------------------------------------
 output "tags" {
