@@ -22,7 +22,6 @@ resource "azurerm_public_ip" "pip" {
     for natgw in var.nat_gateways : natgw.name => natgw
     if var.enable && var.enable_nat_gateway
   }
-
   name                = var.resource_position_prefix ? format("ng-ip-%s-%s", local.name, each.value.name) : format("%s-ng-ip-%s", local.name, each.value.name)
   allocation_method   = var.allocation_method
   location            = var.location
@@ -36,7 +35,6 @@ resource "azurerm_public_ip" "pip" {
 ##-----------------------------------------------------------------------------
 resource "azurerm_nat_gateway" "natgw" {
   for_each = var.enable && var.enable_nat_gateway ? { for natgw in var.nat_gateways : natgw.name => natgw } : {}
-
   name                    = each.value.name
   location                = var.location
   resource_group_name     = var.resource_group_name
@@ -51,7 +49,6 @@ resource "azurerm_nat_gateway" "natgw" {
 ##-----------------------------------------------------------------------------
 resource "azurerm_subnet" "subnet" {
   for_each = var.enable ? { for subnet in var.subnets : subnet.name => subnet } : {}
-
   name                                          = each.value.name
   resource_group_name                           = var.resource_group_name
   virtual_network_name                          = var.virtual_network_name
@@ -84,7 +81,6 @@ resource "azurerm_route_table" "rt" {
   for_each = var.enable && var.enable_route_table ? {
     for rt in var.route_tables : rt.name => rt
   } : {}
-
   name                          = each.value.name
   location                      = var.location
   resource_group_name           = var.resource_group_name
@@ -110,7 +106,7 @@ resource "azurerm_subnet_route_table_association" "main" {
     for subnet in var.subnets : subnet.name => subnet
     if var.enable && var.enable_route_table && lookup(subnet, "route_table_name", null) != null
   }
-
+  
   subnet_id      = azurerm_subnet.subnet[each.key].id
   route_table_id = azurerm_route_table.rt[each.value.route_table_name].id
 }

@@ -1,13 +1,3 @@
-# ##-----------------------------------------------------------------------------
-# ## Variables
-# ##-----------------------------------------------------------------------------
-# variable "label_order" {
-#   type        = list(any)
-#   default     = ["name", "environment", "location"]
-#   description = "Label order, e.g. `name`,`application`,`centralus`."
-# }
-
-
 ##-----------------------------------------------------------------------------
 ## Naming convention
 ##-----------------------------------------------------------------------------
@@ -58,7 +48,7 @@ variable "environment" {
 variable "label_order" {
   type        = list(any)
   default     = ["name", "environment", "location"]
-  description = "Label order, e.g. `name`,`application`,`centralus`."
+  description = "The order of labels used to construct resource names or tags. If not specified, defaults to ['name', 'environment', 'location']."
 }
 
 variable "managedby" {

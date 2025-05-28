@@ -11,6 +11,5 @@ jobs:
     secrets:
       GITHUB: ${{ secrets.GITHUB }}
     with:
-      assignees: 'author'
+      assignees: 'clouddrove-ci'
       reviewers: '@terraform-az-modules/crew'
-

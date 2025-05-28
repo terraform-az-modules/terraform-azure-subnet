@@ -1,6 +1,5 @@
 provider "azurerm" {
   features {}
-  subscription_id = ""
 }
 
 locals {
@@ -14,8 +13,8 @@ locals {
 ## Resource group in which all resources will be deployed.
 ##-----------------------------------------------------------------------------
 module "resource_group" {
-  source      = "clouddrove/resource-group/azure" #update this with new one
-  version     = "1.0.2"
+  source      = "terraform-az-modules/resource-group/azure"
+  version     = "1.0.0"
   name        = local.name
   environment = local.environment
   label_order = local.label_order
@@ -37,9 +36,10 @@ module "vnet" {
 }
 
 ##-----------------------------------------------------------------------------
-## Subnet module configuration with advanced features
+## Subnet module configuration 
 ##-----------------------------------------------------------------------------
 module "subnets" {
+  # depends_on              = [module.network_security_group]
   source               = "../../"
   name                 = local.name
   environment          = local.environment
@@ -47,31 +47,38 @@ module "subnets" {
   resource_group_name  = module.resource_group.resource_group_name
   location             = module.resource_group.resource_group_location
   virtual_network_name = module.vnet.vnet_name
+  enable_nat_gateway   = true
 
   subnets = [
-    # Subnet 1: Delegated subnet 
     {
-      name              = "subnet1"
-      subnet_prefixes   = ["10.0.1.0/24"]
-      service_endpoints = ["Microsoft.Storage"]
-
-      delegations = [
-        {
-          name = "delegation1"
-          service_delegations = [
-            {
-              name    = "Microsoft.ContainerInstance/containerGroups"
-              actions = ["Microsoft.Network/virtualNetworks/subnets/action"]
-            }
-          ]
-        }
-      ]
+      name               = "subnet1"
+      subnet_prefixes    = ["10.0.1.0/24"]
+      attach_nat_gateway = true     # Associate with NAT gateway
+      nat_gateway_name   = "natgw1" # NAT gateway to be attached
     },
-
-    # Subnet 2: azure Firewall subnet 
     {
-      name            = "AzureFirewallSubnet"
-      subnet_prefixes = "10.0.1.0/26"
+      name               = "subnet2"
+      subnet_prefixes    = ["10.0.2.0/24"]
+      attach_nat_gateway = true
+      nat_gateway_name   = "natgw2"
+    },
+    # subnet without any nat-gateway
+    {
+      name               = "subnet3"
+      subnet_prefixes    = ["10.1.0.0/24"]
+      attach_nat_gateway = false
+    }
+  ]
+  nat_gateways = [
+    {
+      name                     = "natgw1"
+      sku_name                 = "Standard"
+      nat_gateway_idle_timeout = 10
+    },
+    {
+      name                     = "natgw2"
+      sku_name                 = "Standard"
+      nat_gateway_idle_timeout = 10
     }
   ]
 }

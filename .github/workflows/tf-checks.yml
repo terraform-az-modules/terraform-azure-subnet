@@ -6,13 +6,34 @@ on:
   workflow_dispatch:
 jobs:
 # Update 'Job name' and 'working_directory' as needed based on the module structure.
-  complete-example:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.3.3
+  basic-example:
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
-      working_directory: './examples/complete/'
+      working_directory: './examples/basic/'
+
+  complete-example:
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
+    with:
+      working_directory: './examples/complete-example/'    
   
+  nat-gateway-subnet-example:
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
+    with:
+      working_directory: './examples/nat-gateway-subnet-example/'    
+
+  nsg-subnet-example:
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
+    with:
+      working_directory: './examples/nsg-subnet-example/' 
+
+  route-table-subnet-example:
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
+    with:
+      working_directory: './examples/route-table-subnet-example/' 
+
 # Seperate Job for TFlint workflow call
   tf-lint:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-lint.yml@1.3.3
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-lint.yml@master
     secrets:
       GITHUB: ${{ secrets.GITHUB }}
+ 

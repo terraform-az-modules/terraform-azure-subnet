@@ -1,6 +1,5 @@
 provider "azurerm" {
   features {}
-  subscription_id = ""
 }
 
 locals {
@@ -14,8 +13,8 @@ locals {
 ## Resource group in which all resources will be deployed.
 ##-----------------------------------------------------------------------------
 module "resource_group" {
-  source      = "terraform-az-modules/resource-group/azure"
-  version     = "1.0.0"
+  source      = "clouddrove/resource-group/azure" #update this with new one
+  version     = "1.0.2"
   name        = local.name
   environment = local.environment
   label_order = local.label_order
@@ -37,7 +36,7 @@ module "vnet" {
 }
 
 ##-----------------------------------------------------------------------------
-## Subnet module configuration (Basic)
+## Subnet module configuration with advanced features
 ##-----------------------------------------------------------------------------
 module "subnets" {
   source               = "../../"
@@ -49,9 +48,29 @@ module "subnets" {
   virtual_network_name = module.vnet.vnet_name
 
   subnets = [
+    # Subnet 1: Delegated subnet 
     {
-      name            = "basic-subnet"
-      subnet_prefixes = "10.0.1.0/24"
+      name              = "subnet1"
+      subnet_prefixes   = ["10.0.1.0/24"]
+      service_endpoints = ["Microsoft.Storage"]
+
+      delegations = [
+        {
+          name = "delegation1"
+          service_delegations = [
+            {
+              name    = "Microsoft.ContainerInstance/containerGroups"
+              actions = ["Microsoft.Network/virtualNetworks/subnets/action"]
+            }
+          ]
+        }
+      ]
+    },
+
+    # Subnet 2: azure Firewall subnet 
+    {
+      name            = "AzureFirewallSubnet"
+      subnet_prefixes = "10.0.1.0/26"
     }
   ]
 }
