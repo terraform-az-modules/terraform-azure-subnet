@@ -14,22 +14,22 @@ jobs:
   complete-example:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
-      working_directory: './examples/complete-example/'    
+      working_directory: './examples/complete/'    
   
   nat-gateway-subnet-example:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
-      working_directory: './examples/nat-gateway-subnet-example/'    
+      working_directory: './examples/subnet_with_nat_gateway/'    
 
   nsg-subnet-example:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
-      working_directory: './examples/nsg-subnet-example/' 
+      working_directory: './examples/subnet_with_nsg/' 
 
   route-table-subnet-example:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
-      working_directory: './examples/route-table-subnet-example/' 
+      working_directory: './examples/subnet_with_route_table/' 
 
 # Seperate Job for TFlint workflow call
   tf-lint:

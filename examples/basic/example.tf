@@ -50,7 +50,7 @@ module "subnets" {
   subnets = [
     {
       name            = "basic-subnet"
-      subnet_prefixes = "10.0.1.0/24"
+      subnet_prefixes = ["10.0.1.0/24"]
     }
   ]
 }

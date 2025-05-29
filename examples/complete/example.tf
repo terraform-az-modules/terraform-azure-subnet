@@ -66,11 +66,10 @@ module "subnets" {
         }
       ]
     },
-
     # Subnet 2: azure Firewall subnet 
     {
       name            = "AzureFirewallSubnet"
-      subnet_prefixes = "10.0.1.0/26"
+      subnet_prefixes = ["10.0.1.0/26"]
     }
   ]
 }
