@@ -34,7 +34,7 @@ resource "azurerm_public_ip" "pip" {
 ## NAT Gateway – Creates a nat-gateway if required 
 ##-----------------------------------------------------------------------------
 resource "azurerm_nat_gateway" "natgw" {
-  for_each = var.enable && var.enable_nat_gateway ? { for natgw in var.nat_gateways : natgw.name => natgw } : {}
+  for_each                = var.enable && var.enable_nat_gateway ? { for natgw in var.nat_gateways : natgw.name => natgw } : {}
   name                    = each.value.name
   location                = var.location
   resource_group_name     = var.resource_group_name
@@ -48,7 +48,7 @@ resource "azurerm_nat_gateway" "natgw" {
 ## Subnet – Creates a subnet with optional service endpoints, delegations, etc
 ##-----------------------------------------------------------------------------
 resource "azurerm_subnet" "subnet" {
-  for_each = var.enable ? { for subnet in var.subnets : subnet.name => subnet } : {}
+  for_each                                      = var.enable ? { for subnet in var.subnets : subnet.name => subnet } : {}
   name                                          = each.value.name
   resource_group_name                           = var.resource_group_name
   virtual_network_name                          = var.virtual_network_name
@@ -106,7 +106,7 @@ resource "azurerm_subnet_route_table_association" "main" {
     for subnet in var.subnets : subnet.name => subnet
     if var.enable && var.enable_route_table && lookup(subnet, "route_table_name", null) != null
   }
-  
+
   subnet_id      = azurerm_subnet.subnet[each.key].id
   route_table_id = azurerm_route_table.rt[each.value.route_table_name].id
 }
