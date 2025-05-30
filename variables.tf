@@ -95,7 +95,6 @@ variable "subnets" {
   type = list(object({
     name                          = string
     subnet_prefixes               = list(string)
-    attach_nat_gateway            = optional(bool, false)
     nat_gateway_name              = optional(string)
     route_table_name              = optional(string)
     nsg_association               = optional(bool, false)
@@ -160,12 +159,6 @@ variable "enable_route_table" {
   description = "Flag to control route table creation."
 }
 
-variable "nsg_association" {
-  type        = bool
-  default     = false
-  description = "Flag to control the nsg association"
-}
-
 variable "allocation_method" {
   type        = string
   default     = "Static"
@@ -177,12 +170,3 @@ variable "sku" {
   default     = "Standard"
   description = "The SKU of the Public IP. Accepted values are Basic and Standard. Defaults to Basic. Changing this forces a new resource to be created."
 }
-
-variable "network_security_group_id" {
-  type        = string
-  default     = null
-  description = "Resource id for network security group"
-}
-
-
-

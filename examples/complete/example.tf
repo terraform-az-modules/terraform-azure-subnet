@@ -5,7 +5,7 @@ provider "azurerm" {
 locals {
   name        = "app"
   environment = "test"
-  label_order = ["name", "environment"]
+  label_order = ["name", "environment" ,"location"]
 }
 
 ##-----------------------------------------------------------------------------
@@ -13,12 +13,12 @@ locals {
 ## Resource group in which all resources will be deployed.
 ##-----------------------------------------------------------------------------
 module "resource_group" {
-  source      = "clouddrove/resource-group/azure" #update this with new one
-  version     = "1.0.2"
+  source      = "terraform-az-modules/resource-group/azure"
+  version     = "1.0.0"
   name        = local.name
   environment = local.environment
   label_order = local.label_order
-  location    = "North Europe"
+  location    = "northeurope"
 }
 
 ##-----------------------------------------------------------------------------
@@ -29,7 +29,7 @@ module "vnet" {
   version             = "1.0.4"
   name                = local.name
   environment         = local.environment
-  label_order         = local.label_order
+  label_order         = ["name","environment"]
   resource_group_name = module.resource_group.resource_group_name
   location            = module.resource_group.resource_group_location
   address_spaces      = ["10.0.0.0/16"]
@@ -51,7 +51,7 @@ module "subnets" {
     # Subnet 1: Delegated subnet 
     {
       name              = "subnet1"
-      subnet_prefixes   = ["10.0.1.0/24"]
+      subnet_prefixes   = ["10.0.1.0/24"] 
       service_endpoints = ["Microsoft.Storage"]
 
       delegations = [
@@ -69,7 +69,7 @@ module "subnets" {
     # Subnet 2: azure Firewall subnet 
     {
       name            = "AzureFirewallSubnet"
-      subnet_prefixes = ["10.0.1.0/26"]
+      subnet_prefixes = ["10.0.2.0/24"]
     }
   ]
 }

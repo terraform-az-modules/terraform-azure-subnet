@@ -5,7 +5,7 @@ provider "azurerm" {
 locals {
   name        = "app"
   environment = "test"
-  label_order = ["name", "environment"]
+  label_order = ["name", "environment", "location"]
 }
 
 ##-----------------------------------------------------------------------------
@@ -18,7 +18,7 @@ module "resource_group" {
   name        = local.name
   environment = local.environment
   label_order = local.label_order
-  location    = "North Europe"
+  location    = "northeurope"
 }
 
 ##-----------------------------------------------------------------------------
@@ -29,7 +29,7 @@ module "vnet" {
   version             = "1.0.4"
   name                = local.name
   environment         = local.environment
-  label_order         = local.label_order
+  label_order         = ["name","environment"]
   resource_group_name = module.resource_group.resource_group_name
   location            = module.resource_group.resource_group_location
   address_spaces      = ["10.0.0.0/16"]
@@ -46,12 +46,13 @@ module "subnets" {
   resource_group_name  = module.resource_group.resource_group_name
   location             = module.resource_group.resource_group_location
   virtual_network_name = module.vnet.vnet_name
-
+  enable_route_table   = true
+  
   subnets = [
     {
       name                    = "subnet1"
       subnet_prefixes         = ["10.0.1.0/24"]
-      route_table_name        = "rt1" # Route table association
+      route_table_name        = "rt1" # Route table gets associated only when name is passed
       default_outbound_access = true
     },
     {
@@ -65,7 +66,7 @@ module "subnets" {
   route_tables = [
     {
       name                          = "rt1"
-      bgp_route_propagation_enabled = false
+      bgp_route_propagation_enabled = true
       routes = [
         {
           name           = "route1"
@@ -76,7 +77,7 @@ module "subnets" {
     },
     {
       name                          = "rt2"
-      bgp_route_propagation_enabled = false
+      bgp_route_propagation_enabled = true
       routes = [
         {
           name           = "route2"

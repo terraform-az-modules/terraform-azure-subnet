@@ -18,7 +18,7 @@ module "resource_group" {
   name        = local.name
   environment = local.environment
   label_order = local.label_order
-  location    = "North Europe"
+  location    = "northeurope"
 }
 
 ##-----------------------------------------------------------------------------
@@ -29,7 +29,7 @@ module "vnet" {
   version             = "1.0.4"
   name                = local.name
   environment         = local.environment
-  label_order         = local.label_order
+  label_order         = ["name","environment"]
   resource_group_name = module.resource_group.resource_group_name
   location            = module.resource_group.resource_group_location
   address_spaces      = ["10.0.0.0/16"]
@@ -50,7 +50,7 @@ module "subnets" {
   subnets = [
     {
       name                          = "subnet1"
-      subnet_prefixes               = ["10.0.1.0/24", "10.0.2.0/24"]
+      subnet_prefixes               = ["10.0.1.0/24"] #Note: Multiple prefixes in a subnet not supported in case of delegations
       attach_nat_gateway            = true     # Associate with NAT gateway
       nat_gateway_name              = "natgw1" # Specific NAT gateway reference
       route_table_name              = "rt1"    # Route table association
@@ -59,7 +59,6 @@ module "subnets" {
       private_endpoint_policies     = "Enabled"
       default_outbound_access       = true
       nsg_association               = true
-      network_security_group_id     = module.network_security_group.id
 
       delegations = [
         {
@@ -75,7 +74,7 @@ module "subnets" {
     },
     {
       name               = "subnet2"
-      subnet_prefixes    = ["10.1.0.0/24"]
+      subnet_prefixes    = ["10.0.2.0/24"]
       attach_nat_gateway = false
       nsg_association    = false
     }

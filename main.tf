@@ -22,7 +22,7 @@ resource "azurerm_public_ip" "pip" {
     for natgw in var.nat_gateways : natgw.name => natgw
     if var.enable && var.enable_nat_gateway
   }
-  name                = var.resource_position_prefix ? format("ng-ip-%s-%s", local.name, each.value.name) : format("%s-ng-ip-%s", local.name, each.value.name)
+  name                = var.resource_position_prefix ? format("pip-ng-%s-%s", local.name, each.value.name) : format("%s-%s-pip-ng", local.name, each.value.name)
   allocation_method   = var.allocation_method
   location            = var.location
   resource_group_name = var.resource_group_name
@@ -35,7 +35,7 @@ resource "azurerm_public_ip" "pip" {
 ##-----------------------------------------------------------------------------
 resource "azurerm_nat_gateway" "natgw" {
   for_each                = var.enable && var.enable_nat_gateway ? { for natgw in var.nat_gateways : natgw.name => natgw } : {}
-  name                    = each.value.name
+  name                    = var.resource_position_prefix ? format("ngw-%s-%s", local.name, each.value.name) : format("%s-%s-ngw", local.name, each.value.name)
   location                = var.location
   resource_group_name     = var.resource_group_name
   sku_name                = lookup(each.value, "sku_name", "Standard")
@@ -53,8 +53,8 @@ resource "azurerm_subnet" "subnet" {
   resource_group_name                           = var.resource_group_name
   virtual_network_name                          = var.virtual_network_name
   address_prefixes                              = each.value.subnet_prefixes
-  service_endpoints                             = lookup(each.value, "service_endpoints", [])
-  service_endpoint_policy_ids                   = lookup(each.value, "service_endpoint_policy_ids", [])
+  service_endpoints                             = lookup(each.value, "service_endpoints", null)
+  service_endpoint_policy_ids                   = lookup(each.value, "service_endpoint_policy_ids", null)
   private_link_service_network_policies_enabled = lookup(each.value, "private_link_service_policies", true)
   private_endpoint_network_policies             = lookup(each.value, "private_endpoint_policies", "Enabled")
   default_outbound_access_enabled               = lookup(each.value, "default_outbound_access", true)
@@ -81,7 +81,7 @@ resource "azurerm_route_table" "rt" {
   for_each = var.enable && var.enable_route_table ? {
     for rt in var.route_tables : rt.name => rt
   } : {}
-  name                          = each.value.name
+  name                          = var.resource_position_prefix ? format("rt-%s", each.value.name) : format("%s-rt", each.value.name)
   location                      = var.location
   resource_group_name           = var.resource_group_name
   bgp_route_propagation_enabled = lookup(each.value, "bgp_route_propagation_enabled", false)

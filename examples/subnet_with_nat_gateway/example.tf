@@ -5,7 +5,7 @@ provider "azurerm" {
 locals {
   name        = "app"
   environment = "test"
-  label_order = ["name", "environment"]
+  label_order = ["name", "environment" ,"location"]
 }
 
 ##-----------------------------------------------------------------------------
@@ -29,7 +29,7 @@ module "vnet" {
   version             = "1.0.4"
   name                = local.name
   environment         = local.environment
-  label_order         = local.label_order
+  label_order         = ["name","environment"]
   resource_group_name = module.resource_group.resource_group_name
   location            = module.resource_group.resource_group_location
   address_spaces      = ["10.0.0.0/16"]
@@ -53,20 +53,17 @@ module "subnets" {
     {
       name               = "subnet1"
       subnet_prefixes    = ["10.0.1.0/24"]
-      attach_nat_gateway = true     # Associate with NAT gateway
-      nat_gateway_name   = "natgw1" # NAT gateway to be attached
+      nat_gateway_name   = "natgw1" # NAT gateway to be attached,only when name is passed
     },
     {
       name               = "subnet2"
       subnet_prefixes    = ["10.0.2.0/24"]
-      attach_nat_gateway = true
       nat_gateway_name   = "natgw2"
     },
     # subnet without any nat-gateway
     {
       name               = "subnet3"
-      subnet_prefixes    = ["10.1.0.0/24"]
-      attach_nat_gateway = false
+      subnet_prefixes    = ["10.0.0.0/24"]
     }
   ]
   nat_gateways = [
