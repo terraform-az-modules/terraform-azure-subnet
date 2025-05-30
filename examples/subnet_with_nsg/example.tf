@@ -29,7 +29,7 @@ module "vnet" {
   version             = "1.0.4"
   name                = local.name
   environment         = local.environment
-  label_order         = ["name","environment"]
+  label_order         = ["name", "environment"]
   resource_group_name = module.resource_group.resource_group_name
   location            = module.resource_group.resource_group_location
   address_spaces      = ["10.0.0.0/16"]
@@ -51,9 +51,9 @@ module "subnets" {
     {
       name                          = "subnet1"
       subnet_prefixes               = ["10.0.1.0/24"] #Note: Multiple prefixes in a subnet not supported in case of delegations
-      attach_nat_gateway            = true     # Associate with NAT gateway
-      nat_gateway_name              = "natgw1" # Specific NAT gateway reference
-      route_table_name              = "rt1"    # Route table association
+      attach_nat_gateway            = true            # Associate with NAT gateway
+      nat_gateway_name              = "natgw1"        # Specific NAT gateway reference
+      route_table_name              = "rt1"           # Route table association
       service_endpoints             = ["Microsoft.Storage"]
       private_link_service_policies = true
       private_endpoint_policies     = "Enabled"

@@ -29,7 +29,7 @@ module "vnet" {
   version             = "1.0.4"
   name                = local.name
   environment         = local.environment
-  label_order         = ["name","environment"]
+  label_order         = ["name", "environment"]
   resource_group_name = module.resource_group.resource_group_name
   location            = module.resource_group.resource_group_location
   address_spaces      = ["10.0.0.0/16"]
@@ -47,7 +47,7 @@ module "subnets" {
   location             = module.resource_group.resource_group_location
   virtual_network_name = module.vnet.vnet_name
   enable_route_table   = true
-  
+
   subnets = [
     {
       name                    = "subnet1"
