@@ -54,7 +54,6 @@ _No input variables are defined in this example._
 | `resource_group_name`         | The name of the resource group.                            |
 | `subnet_ids`                 | Map of subnet names to their IDs.                          |
 | `subnet_names`               | Map of subnet names to their names.                        |
-| `subnet_nat_gateway_association_ids` | Map of subnet names to their NAT gateway association resource IDs. |
 | `tags`                       | Tags applied to the resources.                             |
 | `vnet_address_space`         | The address space of the virtual network.                  |
 | `vnet_id`                    | The ID of the virtual network.                             |
