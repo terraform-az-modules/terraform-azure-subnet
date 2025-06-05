@@ -25,8 +25,8 @@ module "resource_group" {
 ## Virtual Network module call.
 ##-----------------------------------------------------------------------------
 module "vnet" {
-  source              = "clouddrove/vnet/azure"
-  version             = "1.0.4"
+  source              = "terraform-az-modules/vnet/azure"
+  version             = "1.0.0"
   name                = local.name
   environment         = local.environment
   label_order         = ["name", "environment"]
@@ -77,7 +77,7 @@ module "subnets" {
     },
     {
       name                          = "rt2"
-      bgp_route_propagation_enabled = true
+      bgp_route_propagation_enabled = false
       routes = [
         {
           name           = "route2"

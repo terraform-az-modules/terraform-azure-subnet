@@ -5,7 +5,6 @@ on:
   pull_request:
   workflow_dispatch:
 jobs:
-# Update 'Job name' and 'working_directory' as needed based on the module structure.
   basic-example:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:

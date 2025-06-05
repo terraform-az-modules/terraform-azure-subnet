@@ -51,8 +51,6 @@ _No input variables are defined in this example._
 | `resource_group_name`         | The name of the resource group.                            |
 | `route_table_ids`             | Map of route table names to their IDs.                    |
 | `subnet_ids`                 | Map of subnet names to their IDs.                          |
-| `subnet_names`               | Map of subnet names to their names.                        |
-| `subnet_route_table_association_ids` | Map of subnet names to their route table association resource IDs. |
 | `tags`                       | Tags applied to the resources.                             |
 | `vnet_address_space`         | The address space of the virtual network.                  |
 | `vnet_id`                    | The ID of the virtual network.                             |

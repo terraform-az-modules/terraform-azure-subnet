@@ -18,18 +18,18 @@ module "resource_group" {
   name        = local.name
   environment = local.environment
   label_order = local.label_order
-  location    = "North Europe"
+  location    = "northeurope"
 }
 
 ##-----------------------------------------------------------------------------
 ## Virtual Network module call.
 ##-----------------------------------------------------------------------------
 module "vnet" {
-  source              = "clouddrove/vnet/azure"
-  version             = "1.0.4"
+  source              = "terraform-az-modules/vnet/azure"
+  version             = "1.0.0"
   name                = local.name
   environment         = local.environment
-  label_order         = ["name", "environment"]
+  label_order         = local.label_order
   resource_group_name = module.resource_group.resource_group_name
   location            = module.resource_group.resource_group_location
   address_spaces      = ["10.0.0.0/16"]
@@ -39,7 +39,6 @@ module "vnet" {
 ## Subnet module configuration 
 ##-----------------------------------------------------------------------------
 module "subnets" {
-  # depends_on              = [module.network_security_group]
   source               = "../../"
   name                 = local.name
   environment          = local.environment
@@ -54,6 +53,7 @@ module "subnets" {
       name             = "subnet1"
       subnet_prefixes  = ["10.0.1.0/24"]
       nat_gateway_name = "natgw1" # NAT gateway to be attached,only when name is passed
+
     },
     {
       name             = "subnet2"
@@ -66,6 +66,7 @@ module "subnets" {
       subnet_prefixes = ["10.0.0.0/24"]
     }
   ]
+
   nat_gateways = [
     {
       name                     = "natgw1"
@@ -79,3 +80,4 @@ module "subnets" {
     }
   ]
 }
+

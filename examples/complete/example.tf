@@ -25,11 +25,11 @@ module "resource_group" {
 ## Virtual Network module call.
 ##-----------------------------------------------------------------------------
 module "vnet" {
-  source              = "clouddrove/vnet/azure"
-  version             = "1.0.4"
+  source              = "terraform-az-modules/vnet/azure"
+  version             = "1.0.0"
   name                = local.name
   environment         = local.environment
-  label_order         = ["name", "environment"]
+  label_order         = local.label_order
   resource_group_name = module.resource_group.resource_group_name
   location            = module.resource_group.resource_group_location
   address_spaces      = ["10.0.0.0/16"]
@@ -50,10 +50,12 @@ module "subnets" {
   subnets = [
     # Subnet 1: Delegated subnet 
     {
-      name              = "subnet1"
-      subnet_prefixes   = ["10.0.1.0/24"]
-      service_endpoints = ["Microsoft.Storage"]
-
+      name               = "subnet1"
+      subnet_prefixes    = ["10.0.1.0/24"]
+      service_endpoints  = ["Microsoft.Storage"]
+      enable             = true
+      enable_nat_gateway = true
+      nat_gateway_name   = "natgw1"
       delegations = [
         {
           name = "delegation1"

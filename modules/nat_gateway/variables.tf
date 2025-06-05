@@ -43,13 +43,13 @@ variable "environment" {
 variable "label_order" {
   type        = list(any)
   default     = ["name", "environment", "location"]
-  description = "The order of labels used to construct resource names or tags. If not specified, defaults to ['name', 'environment', 'location']."
+  description = "Label order, e.g. `name`,`application`,`centralus`."
 }
 
 variable "managedby" {
   type        = string
   default     = "terraform-az-modules"
-  description = "ManagedBy, eg 'terraform-az-modules'."
+  description = "ManagedBy, eg 'terraform-az--modules'."
 }
 
 variable "deployment_mode" {
@@ -64,12 +64,6 @@ variable "extra_tags" {
   description = "Variable to pass extra tags."
 }
 
-variable "enable" {
-  type        = bool
-  default     = true
-  description = "Flag to control the module creation."
-}
-
 variable "resource_group_name" {
   type        = string
   default     = null
@@ -80,40 +74,6 @@ variable "location" {
   type        = string
   default     = ""
   description = "The location/region where the virtual network is created."
-}
-
-##-----------------------------------------------------------------------------
-## Subnet
-##-----------------------------------------------------------------------------
-variable "subnets" {
-  description = "List of subnets to create"
-  type = list(object({
-    name                          = string
-    subnet_prefixes               = list(string)
-    nat_gateway_name              = optional(string)
-    route_table_name              = optional(string)
-    nsg_association               = optional(bool, false)
-    service_endpoints             = optional(list(string), [])
-    service_endpoint_policy_ids   = optional(list(string), [])
-    private_link_service_policies = optional(bool, true)
-    private_endpoint_policies     = optional(string, "Enabled")
-    default_outbound_access       = optional(bool, true)
-    network_security_group_id     = optional(string, null)
-    delegations = optional(list(object({
-      name = string
-      service_delegations = list(object({
-        name    = string
-        actions = list(string)
-      }))
-    })), [])
-  }))
-  default = []
-}
-
-variable "virtual_network_name" {
-  type        = string
-  default     = null
-  description = "Name of the virtual network"
 }
 
 ##-----------------------------------------------------------------------------
@@ -133,40 +93,29 @@ variable "nat_gateways" {
 variable "enable_nat_gateway" {
   type        = bool
   default     = false
-  description = "Flag to control nat gateway creation."
-}
-
-##-----------------------------------------------------------------------------
-## Route Table
-##-----------------------------------------------------------------------------
-variable "route_tables" {
-  description = "List of route tables with their configuration."
-  type = list(object({
-    name                          = string
-    bgp_route_propagation_enabled = optional(bool, false)
-    routes = optional(list(object({
-      name                   = string
-      address_prefix         = string
-      next_hop_type          = string
-      next_hop_in_ip_address = optional(string)
-    })), [])
-  }))
-  default = []
-}
-
-variable "routes" {
-  description = "List of routes to associate with route tables."
-  type = list(object({
-    name                   = string
-    address_prefix         = string
-    next_hop_type          = string
-    next_hop_in_ip_address = optional(string)
-  }))
-  default = []
-}
-
-variable "enable_route_table" {
-  type        = bool
-  default     = false
   description = "Flag to control route table creation."
+}
+
+variable "allocation_method" {
+  type        = string
+  default     = "Static"
+  description = "Defines the allocation method for this IP address."
+}
+
+variable "sku" {
+  type        = string
+  default     = "Standard"
+  description = "The SKU of the Public IP."
+}
+
+variable "nat_gateway_idle_timeout" {
+  description = "The idle timeout which should be used in minutes for the NAT Gateway. Defaults to 4."
+  type        = number
+  default     = 4
+}
+
+variable "zones" {
+  description = "A list of availability zones in which the NAT Gateway should be deployed."
+  type        = list(string)
+  default     = []
 }

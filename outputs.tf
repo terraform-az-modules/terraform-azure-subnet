@@ -1,11 +1,3 @@
-# ##-----------------------------------------------------------------------------
-# ## Outputs
-# ##-----------------------------------------------------------------------------
-# output "label_order" {
-#   value       = local.label_order
-#   description = "Label order."
-# }
-
 ##-----------------------------------------------------------------------------
 ## Subnet
 ##-----------------------------------------------------------------------------
@@ -28,12 +20,12 @@ output "subnet_address_prefixes" {
 ## Public IP
 ##-----------------------------------------------------------------------------
 output "public_ip_addresses" {
-  value       = { for k, pip in azurerm_public_ip.pip : k => pip.ip_address }
+  value       = { for k, pip in module.nat_gateway : k => pip.public_ip_addresses }
   description = "Map of NAT Gateway names to their associated public IP addresses."
 }
 
 output "public_ip_ids" {
-  value       = { for k, pip in azurerm_public_ip.pip : k => pip.id }
+  value       = { for k, pip in module.nat_gateway : k => pip.public_ip_ids }
   description = "Map of NAT Gateway names to their associated public IP resource IDs."
 }
 
@@ -41,36 +33,26 @@ output "public_ip_ids" {
 ## Net Gateway
 ##-----------------------------------------------------------------------------
 output "nat_gateway_ids" {
-  value       = { for k, n in azurerm_nat_gateway.natgw : k => n.id }
+  value       = { for k, v in module.nat_gateway : k => v.nat_gateway_ids }
   description = "Map of NAT Gateway names to their IDs."
 }
 
 output "nat_gateway_names" {
-  value       = { for k, n in azurerm_nat_gateway.natgw : k => n.name }
+  value       = { for k, n in module.nat_gateway : k => n.nat_gateway_names }
   description = "Map of NAT Gateway names to their names."
-}
-
-output "subnet_nat_gateway_association_ids" {
-  value       = { for k, a in azurerm_subnet_nat_gateway_association.subnet_assoc : k => a.id }
-  description = "Map of subnet names to their NAT gateway association resource IDs."
 }
 
 ##-----------------------------------------------------------------------------
 ## Route table
 ##-----------------------------------------------------------------------------
 output "route_table_ids" {
-  value       = { for k, r in azurerm_route_table.rt : k => r.id }
+  value       = { for k, r in module.route_table : k => r.route_table_ids }
   description = "Map of route table names to their IDs."
 }
 
 output "route_table_names" {
-  value       = { for k, r in azurerm_route_table.rt : k => r.name }
+  value       = { for k, r in module.route_table : k => r.route_table_names }
   description = "Map of route table names to their names."
-}
-
-output "subnet_route_table_association_ids" {
-  value       = { for k, a in azurerm_subnet_route_table_association.main : k => a.id }
-  description = "Map of subnet names to their route table association resource IDs."
 }
 
 ##-----------------------------------------------------------------------------

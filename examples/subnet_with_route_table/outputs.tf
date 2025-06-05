@@ -24,11 +24,6 @@ output "subnet_ids" {
   description = "Map of subnet names to their IDs."
 }
 
-output "subnet_names" {
-  value       = module.subnets.subnet_names
-  description = "Map of subnet names to their names."
-}
-
 ##-----------------------------------------------------------------------------
 ## Resource Group
 ##-----------------------------------------------------------------------------
@@ -48,11 +43,6 @@ output "resource_group_location" {
 output "route_table_ids" {
   value       = module.subnets.route_table_ids
   description = "Map of route table names to their IDs."
-}
-
-output "subnet_route_table_association_ids" {
-  value       = module.subnets.subnet_route_table_association_ids
-  description = "Map of subnet names to their route table association resource IDs."
 }
 
 ##-----------------------------------------------------------------------------

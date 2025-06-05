@@ -17,19 +17,6 @@ output "vnet_address_space" {
 }
 
 ##-----------------------------------------------------------------------------
-## Subnet
-##-----------------------------------------------------------------------------
-output "subnet_ids" {
-  value       = module.subnets.subnet_ids
-  description = "Map of subnet names to their IDs."
-}
-
-output "subnet_names" {
-  value       = module.subnets.subnet_names
-  description = "Map of subnet names to their names."
-}
-
-##-----------------------------------------------------------------------------
 ## Resource Group
 ##-----------------------------------------------------------------------------
 output "resource_group_name" {
@@ -40,6 +27,14 @@ output "resource_group_name" {
 output "resource_group_location" {
   value       = module.resource_group.resource_group_location
   description = "The Azure location of the resource group."
+}
+
+##-----------------------------------------------------------------------------
+## Subnet
+##-----------------------------------------------------------------------------
+output "subnet_ids" {
+  value       = module.subnets.subnet_ids
+  description = "Map of subnet names to their IDs."
 }
 
 ##-----------------------------------------------------------------------------
@@ -61,11 +56,6 @@ output "public_ip_ids" {
 output "nat_gateway_ids" {
   value       = module.subnets.nat_gateway_ids
   description = "Map of NAT Gateway names to their IDs."
-}
-
-output "subnet_nat_gateway_association_ids" {
-  value       = module.subnets.subnet_nat_gateway_association_ids
-  description = "Map of subnet names to their NAT gateway association resource IDs."
 }
 
 ##-----------------------------------------------------------------------------

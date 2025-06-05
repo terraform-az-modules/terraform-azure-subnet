@@ -12,7 +12,7 @@ updates:
       interval: "daily"
     open-pull-requests-limit: 3
     assignees:
-      - "@terraform-az-modules/crew"
+      - "clouddrove-ci"
     reviewers:
     - "approvers"
     - "Crew"
@@ -23,7 +23,7 @@ updates:
       interval: "daily"
     # Add assignees
     assignees:
-      - "@terraform-az-modules/crew"
+      - "clouddrove-ci"
     # Add reviewer
     reviewers:
       - "approvers"
@@ -37,7 +37,7 @@ updates:
       interval: "daily"
     # Add assignees
     assignees:
-      - "@terraform-az-modules/crew"
+      - "clouddrove-ci"
     # Add reviewer
     reviewers:
       - "approvers"

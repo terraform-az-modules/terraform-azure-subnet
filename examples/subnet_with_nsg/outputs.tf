@@ -24,11 +24,6 @@ output "subnet_ids" {
   description = "Map of subnet names to their IDs."
 }
 
-output "subnet_names" {
-  value       = module.subnets.subnet_names
-  description = "Map of subnet names to their names."
-}
-
 ##-----------------------------------------------------------------------------
 ## Resource Group
 ##-----------------------------------------------------------------------------
@@ -40,14 +35,6 @@ output "resource_group_name" {
 output "resource_group_location" {
   value       = module.resource_group.resource_group_location
   description = "The Azure location of the resource group."
-}
-
-##-----------------------------------------------------------------------------
-## Nsg association
-##-----------------------------------------------------------------------------
-output "subnet_nsg_association_ids" {
-  value       = module.network_security_group.id
-  description = "Map of subnet names to their NAT gateway association resource IDs."
 }
 
 ##-----------------------------------------------------------------------------

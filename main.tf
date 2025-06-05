@@ -15,36 +15,6 @@ module "labels" {
 }
 
 ##-----------------------------------------------------------------------------
-## Public IP for NAT Gateway – Creates a public IP for NAT Gateways with attachment flag
-##-----------------------------------------------------------------------------
-resource "azurerm_public_ip" "pip" {
-  for_each = {
-    for natgw in var.nat_gateways : natgw.name => natgw
-    if var.enable && var.enable_nat_gateway
-  }
-  name                = var.resource_position_prefix ? format("pip-ng-%s-%s", local.name, each.value.name) : format("%s-%s-pip-ng", local.name, each.value.name)
-  allocation_method   = var.allocation_method
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  sku                 = var.sku
-  tags                = module.labels.tags
-}
-
-##-----------------------------------------------------------------------------
-## NAT Gateway – Creates a nat-gateway if required 
-##-----------------------------------------------------------------------------
-resource "azurerm_nat_gateway" "natgw" {
-  for_each                = var.enable && var.enable_nat_gateway ? { for natgw in var.nat_gateways : natgw.name => natgw } : {}
-  name                    = var.resource_position_prefix ? format("ngw-%s-%s", local.name, each.value.name) : format("%s-%s-ngw", local.name, each.value.name)
-  location                = var.location
-  resource_group_name     = var.resource_group_name
-  sku_name                = lookup(each.value, "sku_name", "Standard")
-  idle_timeout_in_minutes = lookup(each.value, "nat_gateway_idle_timeout", 4)
-  zones                   = lookup(each.value, "zones", [])
-  tags                    = module.labels.tags
-}
-
-##-----------------------------------------------------------------------------
 ## Subnet – Creates a subnet with optional service endpoints, delegations, etc
 ##-----------------------------------------------------------------------------
 resource "azurerm_subnet" "subnet" {
@@ -77,38 +47,45 @@ resource "azurerm_subnet" "subnet" {
 ##-----------------------------------------------------------------------------
 ## Route Table – Creates route table with custom routes if required
 ##-----------------------------------------------------------------------------
-resource "azurerm_route_table" "rt" {
-  for_each = var.enable && var.enable_route_table ? {
-    for rt in var.route_tables : rt.name => rt
-  } : {}
-  name                          = var.resource_position_prefix ? format("rt-%s", each.value.name) : format("%s-rt", each.value.name)
+module "route_table" {
+  source                        = "./modules/route_table"
+  for_each                      = var.enable && var.enable_route_table ? { for rt in var.route_tables : rt.name => rt } : {}
+  name                          = each.value.name
+  environment                   = var.environment
+  label_order                   = var.label_order
   location                      = var.location
   resource_group_name           = var.resource_group_name
-  bgp_route_propagation_enabled = lookup(each.value, "bgp_route_propagation_enabled", false)
-  tags                          = module.labels.tags
-
-  dynamic "route" {
-    for_each = lookup(each.value, "routes", [])
-    content {
-      name                   = route.value.name
-      address_prefix         = route.value.address_prefix
-      next_hop_type          = route.value.next_hop_type
-      next_hop_in_ip_address = lookup(route.value, "next_hop_in_ip_address", null)
-    }
-  }
+  bgp_route_propagation_enabled = each.value.bgp_route_propagation_enabled
+  routes                        = each.value.routes
 }
 
 ##-----------------------------------------------------------------------------
-## Route Table, NAT Gateway, NSG and Public IP Subnet Association
+## NAT Gateway – Creates a nat-gateway if required 
+##-----------------------------------------------------------------------------
+module "nat_gateway" {
+  source                   = "./modules/nat_gateway"
+  for_each                 = var.enable ? { for ngw in var.nat_gateways : ngw.name => ngw } : {}
+  name                     = each.value.name
+  environment              = var.environment
+  label_order              = var.label_order
+  location                 = var.location
+  resource_group_name      = var.resource_group_name
+  sku                      = each.value.sku_name
+  nat_gateways             = var.nat_gateways
+  enable_nat_gateway       = var.enable_nat_gateway
+  nat_gateway_idle_timeout = each.value.nat_gateway_idle_timeout
+}
+
+##-----------------------------------------------------------------------------
+## Route Table, NAT Gateway and NSG Subnet Association
 ##-----------------------------------------------------------------------------
 resource "azurerm_subnet_route_table_association" "main" {
   for_each = {
     for subnet in var.subnets : subnet.name => subnet
     if var.enable && var.enable_route_table && lookup(subnet, "route_table_name", null) != null
   }
-
   subnet_id      = azurerm_subnet.subnet[each.key].id
-  route_table_id = azurerm_route_table.rt[each.value.route_table_name].id
+  route_table_id = module.route_table[each.value.route_table_name].route_table_ids
 }
 
 resource "azurerm_subnet_nat_gateway_association" "subnet_assoc" {
@@ -116,19 +93,8 @@ resource "azurerm_subnet_nat_gateway_association" "subnet_assoc" {
     for subnet in var.subnets : subnet.name => subnet
     if var.enable && var.enable_nat_gateway && lookup(subnet, "nat_gateway_name", null) != null
   }
-
   subnet_id      = azurerm_subnet.subnet[each.key].id
-  nat_gateway_id = azurerm_nat_gateway.natgw[each.value.nat_gateway_name].id
-}
-
-resource "azurerm_nat_gateway_public_ip_association" "pip_assoc" {
-  for_each = {
-    for natgw in var.nat_gateways : natgw.name => natgw
-    if var.enable && var.enable_nat_gateway
-  }
-
-  nat_gateway_id       = azurerm_nat_gateway.natgw[each.key].id
-  public_ip_address_id = azurerm_public_ip.pip[each.key].id
+  nat_gateway_id = module.nat_gateway[each.value.nat_gateway_name].nat_gateway_ids
 }
 
 resource "azurerm_subnet_network_security_group_association" "nsg_subnet_association" {
@@ -136,7 +102,6 @@ resource "azurerm_subnet_network_security_group_association" "nsg_subnet_associa
     for subnet in var.subnets : subnet.name => subnet
     if subnet.nsg_association
   } : {}
-
   subnet_id                 = azurerm_subnet.subnet[each.key].id
   network_security_group_id = each.value.network_security_group_id
 }

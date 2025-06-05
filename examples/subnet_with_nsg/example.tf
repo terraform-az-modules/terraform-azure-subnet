@@ -25,8 +25,8 @@ module "resource_group" {
 ## Virtual Network module call.
 ##-----------------------------------------------------------------------------
 module "vnet" {
-  source              = "clouddrove/vnet/azure"
-  version             = "1.0.4"
+  source              = "terraform-az-modules/vnet/azure"
+  version             = "1.0.0"
   name                = local.name
   environment         = local.environment
   label_order         = ["name", "environment"]
@@ -51,15 +51,12 @@ module "subnets" {
     {
       name                          = "subnet1"
       subnet_prefixes               = ["10.0.1.0/24"] #Note: Multiple prefixes in a subnet not supported in case of delegations
-      attach_nat_gateway            = true            # Associate with NAT gateway
-      nat_gateway_name              = "natgw1"        # Specific NAT gateway reference
-      route_table_name              = "rt1"           # Route table association
       service_endpoints             = ["Microsoft.Storage"]
       private_link_service_policies = true
       private_endpoint_policies     = "Enabled"
       default_outbound_access       = true
       nsg_association               = true
-
+      network_security_group_id     = module.network_security_group.id
       delegations = [
         {
           name = "delegation1"
@@ -85,12 +82,12 @@ module "subnets" {
 ## Network Security Group module call.
 ##-----------------------------------------------------------------------------
 module "network_security_group" {
-  source                  = "clouddrove/network-security-group/azure"
-  version                 = "1.1.0"
-  name                    = local.name
-  environment             = local.environment
-  resource_group_name     = module.resource_group.resource_group_name
-  resource_group_location = module.resource_group.resource_group_location
+  source              = "terraform-az-modules/nsg/azure"
+  version             = "1.0.0"
+  name                = local.name
+  environment         = local.environment
+  resource_group_name = module.resource_group.resource_group_name
+  location            = module.resource_group.resource_group_location
   inbound_rules = [
     {
       name                       = "ssh"

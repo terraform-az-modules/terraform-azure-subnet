@@ -13,7 +13,6 @@ Controls the placement of the resource type keyword (e.g., "vnet", "ddospp") in 
 This helps maintain naming consistency based on organizational preferences.
 EOT
 }
-
 ##-----------------------------------------------------------------------------
 ## Labels
 ##-----------------------------------------------------------------------------
@@ -43,13 +42,13 @@ variable "environment" {
 variable "label_order" {
   type        = list(any)
   default     = ["name", "environment", "location"]
-  description = "The order of labels used to construct resource names or tags. If not specified, defaults to ['name', 'environment', 'location']."
+  description = "Label order, e.g. `name`,`application`,`centralus`."
 }
 
 variable "managedby" {
   type        = string
   default     = "terraform-az-modules"
-  description = "ManagedBy, eg 'terraform-az-modules'."
+  description = "ManagedBy, eg 'terraform-az--modules'."
 }
 
 variable "deployment_mode" {
@@ -64,12 +63,6 @@ variable "extra_tags" {
   description = "Variable to pass extra tags."
 }
 
-variable "enable" {
-  type        = bool
-  default     = true
-  description = "Flag to control the module creation."
-}
-
 variable "resource_group_name" {
   type        = string
   default     = null
@@ -82,74 +75,21 @@ variable "location" {
   description = "The location/region where the virtual network is created."
 }
 
-##-----------------------------------------------------------------------------
-## Subnet
-##-----------------------------------------------------------------------------
-variable "subnets" {
-  description = "List of subnets to create"
-  type = list(object({
-    name                          = string
-    subnet_prefixes               = list(string)
-    nat_gateway_name              = optional(string)
-    route_table_name              = optional(string)
-    nsg_association               = optional(bool, false)
-    service_endpoints             = optional(list(string), [])
-    service_endpoint_policy_ids   = optional(list(string), [])
-    private_link_service_policies = optional(bool, true)
-    private_endpoint_policies     = optional(string, "Enabled")
-    default_outbound_access       = optional(bool, true)
-    network_security_group_id     = optional(string, null)
-    delegations = optional(list(object({
-      name = string
-      service_delegations = list(object({
-        name    = string
-        actions = list(string)
-      }))
-    })), [])
-  }))
-  default = []
-}
-
-variable "virtual_network_name" {
-  type        = string
-  default     = null
-  description = "Name of the virtual network"
-}
-
-##-----------------------------------------------------------------------------
-## Nat Gateway
-##-----------------------------------------------------------------------------
-variable "nat_gateways" {
-  description = "List of NAT Gateways to create"
-  type = list(object({
-    name                     = string
-    sku_name                 = optional(string, "Standard")
-    nat_gateway_idle_timeout = optional(number, 4)
-    zones                    = optional(list(string), [])
-  }))
-  default = []
-}
-
-variable "enable_nat_gateway" {
+variable "bgp_route_propagation_enabled" {
+  description = "Whether BGP route propagation should be enabled for a route table or similar resource."
   type        = bool
   default     = false
-  description = "Flag to control nat gateway creation."
 }
 
 ##-----------------------------------------------------------------------------
 ## Route Table
 ##-----------------------------------------------------------------------------
 variable "route_tables" {
-  description = "List of route tables with their configuration."
+  description = "List of route tables with their configuration and routes."
   type = list(object({
     name                          = string
     bgp_route_propagation_enabled = optional(bool, false)
-    routes = optional(list(object({
-      name                   = string
-      address_prefix         = string
-      next_hop_type          = string
-      next_hop_in_ip_address = optional(string)
-    })), [])
+
   }))
   default = []
 }
@@ -163,10 +103,4 @@ variable "routes" {
     next_hop_in_ip_address = optional(string)
   }))
   default = []
-}
-
-variable "enable_route_table" {
-  type        = bool
-  default     = false
-  description = "Flag to control route table creation."
 }
