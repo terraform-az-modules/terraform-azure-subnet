@@ -1,12 +1,6 @@
 ##-----------------------------------------------------------------------------
 ## Labels
 ##-----------------------------------------------------------------------------
-variable "name" {
-  type        = string
-  default     = null
-  description = "Name  (e.g. `app` or `cluster`)."
-}
-
 variable "repository" {
   type        = string
   default     = "https://github.com/terraform-az-modules/terraform-azure-subnet.git"

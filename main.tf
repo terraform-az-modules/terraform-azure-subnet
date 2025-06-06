@@ -38,9 +38,13 @@ module "route_table" {
   environment                   = var.environment
   label_order                   = var.label_order
   location                      = var.location
+  managedby                     = var.managedby
+  repository                    = var.repository
+  deployment_mode               = var.deployment_mode
   resource_group_name           = var.resource_group_name
   bgp_route_propagation_enabled = each.value.bgp_route_propagation_enabled
   routes                        = each.value.routes
+  extra_tags                    = var.extra_tags
 }
 
 ##-----------------------------------------------------------------------------
@@ -51,11 +55,15 @@ module "nat_gateway" {
   for_each                 = var.enable && var.enable_nat_gateway ? { for ngw in var.nat_gateways : ngw.name => ngw } : {}
   name                     = each.value.name
   environment              = var.environment
-  label_order              = var.label_order
   location                 = var.location
+  managedby                = var.managedby
+  label_order              = var.label_order
   resource_group_name      = var.resource_group_name
+  repository               = var.repository
+  deployment_mode          = var.deployment_mode
   sku                      = each.value.sku_name
   nat_gateway_idle_timeout = each.value.nat_gateway_idle_timeout
+  extra_tags               = var.extra_tags
 }
 
 ##-----------------------------------------------------------------------------
