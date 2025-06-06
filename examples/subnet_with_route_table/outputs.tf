@@ -44,11 +44,3 @@ output "route_table_ids" {
   value       = module.subnets.route_table_ids
   description = "Map of route table names to their IDs."
 }
-
-##-----------------------------------------------------------------------------
-## Tags
-##-----------------------------------------------------------------------------
-output "tags" {
-  value       = module.subnets.tags
-  description = "Tags applied to the resources."
-}
