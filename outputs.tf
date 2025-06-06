@@ -54,11 +54,3 @@ output "route_table_names" {
   value       = { for k, r in module.route_table : k => r.route_table_names }
   description = "Map of route table names to their names."
 }
-
-##-----------------------------------------------------------------------------
-## Tags
-##-----------------------------------------------------------------------------
-output "tags" {
-  value       = module.labels.tags
-  description = "Tags applied to the resources."
-}

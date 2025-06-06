@@ -1,20 +1,4 @@
 ##-----------------------------------------------------------------------------
-## Tagging Module – Applies standard tags to all resources
-##-----------------------------------------------------------------------------
-module "labels" {
-  source          = "terraform-az-modules/tags/azure"
-  version         = "1.0.0"
-  name            = var.name
-  location        = var.location
-  environment     = var.environment
-  managedby       = var.managedby
-  label_order     = var.label_order
-  repository      = var.repository
-  deployment_mode = var.deployment_mode
-  extra_tags      = var.extra_tags
-}
-
-##-----------------------------------------------------------------------------
 ## Subnet – Creates a subnet with optional service endpoints, delegations, etc
 ##-----------------------------------------------------------------------------
 resource "azurerm_subnet" "subnet" {
@@ -64,15 +48,13 @@ module "route_table" {
 ##-----------------------------------------------------------------------------
 module "nat_gateway" {
   source                   = "./modules/nat_gateway"
-  for_each                 = var.enable ? { for ngw in var.nat_gateways : ngw.name => ngw } : {}
+  for_each                 = var.enable && var.enable_nat_gateway ? { for ngw in var.nat_gateways : ngw.name => ngw } : {}
   name                     = each.value.name
   environment              = var.environment
   label_order              = var.label_order
   location                 = var.location
   resource_group_name      = var.resource_group_name
   sku                      = each.value.sku_name
-  nat_gateways             = var.nat_gateways
-  enable_nat_gateway       = var.enable_nat_gateway
   nat_gateway_idle_timeout = each.value.nat_gateway_idle_timeout
 }
 

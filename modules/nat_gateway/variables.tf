@@ -41,9 +41,9 @@ variable "environment" {
 }
 
 variable "label_order" {
-  type        = list(any)
+  type        = list(string)
   default     = ["name", "environment", "location"]
-  description = "Label order, e.g. `name`,`application`,`centralus`."
+  description = "The order of labels used to construct resource names or tags. If not specified, defaults to ['name', 'environment', 'location']."
 }
 
 variable "managedby" {
@@ -79,23 +79,6 @@ variable "location" {
 ##-----------------------------------------------------------------------------
 ## Nat Gateway
 ##-----------------------------------------------------------------------------
-variable "nat_gateways" {
-  description = "List of NAT Gateways to create"
-  type = list(object({
-    name                     = string
-    sku_name                 = optional(string, "Standard")
-    nat_gateway_idle_timeout = optional(number, 4)
-    zones                    = optional(list(string), [])
-  }))
-  default = []
-}
-
-variable "enable_nat_gateway" {
-  type        = bool
-  default     = false
-  description = "Flag to control route table creation."
-}
-
 variable "allocation_method" {
   type        = string
   default     = "Static"
@@ -109,13 +92,13 @@ variable "sku" {
 }
 
 variable "nat_gateway_idle_timeout" {
-  description = "The idle timeout which should be used in minutes for the NAT Gateway. Defaults to 4."
   type        = number
   default     = 4
+  description = "The idle timeout which should be used in minutes for the NAT Gateway. Defaults to 4."
 }
 
 variable "zones" {
-  description = "A list of availability zones in which the NAT Gateway should be deployed."
   type        = list(string)
   default     = []
+  description = "A list of availability zones in which the NAT Gateway should be deployed."
 }

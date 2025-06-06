@@ -50,12 +50,9 @@ module "subnets" {
   subnets = [
     # Subnet 1: Delegated subnet 
     {
-      name               = "subnet1"
-      subnet_prefixes    = ["10.0.1.0/24"]
-      service_endpoints  = ["Microsoft.Storage"]
-      enable             = true
-      enable_nat_gateway = true
-      nat_gateway_name   = "natgw1"
+      name              = "subnet1"
+      subnet_prefixes   = ["10.0.1.0/24"]
+      service_endpoints = ["Microsoft.Storage"]
       delegations = [
         {
           name = "delegation1"

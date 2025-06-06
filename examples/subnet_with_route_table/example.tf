@@ -29,7 +29,7 @@ module "vnet" {
   version             = "1.0.0"
   name                = local.name
   environment         = local.environment
-  label_order         = ["name", "environment"]
+  label_order         = local.label_order
   resource_group_name = module.resource_group.resource_group_name
   location            = module.resource_group.resource_group_location
   address_spaces      = ["10.0.0.0/16"]

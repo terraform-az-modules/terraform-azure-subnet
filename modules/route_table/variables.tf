@@ -13,6 +13,7 @@ Controls the placement of the resource type keyword (e.g., "vnet", "ddospp") in 
 This helps maintain naming consistency based on organizational preferences.
 EOT
 }
+
 ##-----------------------------------------------------------------------------
 ## Labels
 ##-----------------------------------------------------------------------------
@@ -40,9 +41,9 @@ variable "environment" {
 }
 
 variable "label_order" {
-  type        = list(any)
+  type        = list(string)
   default     = ["name", "environment", "location"]
-  description = "Label order, e.g. `name`,`application`,`centralus`."
+  description = "The order of labels used to construct resource names or tags. If not specified, defaults to ['name', 'environment', 'location']."
 }
 
 variable "managedby" {
@@ -76,31 +77,22 @@ variable "location" {
 }
 
 variable "bgp_route_propagation_enabled" {
-  description = "Whether BGP route propagation should be enabled for a route table or similar resource."
   type        = bool
   default     = false
+  description = "Whether BGP route propagation should be enabled for a route table or similar resource."
 }
 
-##-----------------------------------------------------------------------------
-## Route Table
-##-----------------------------------------------------------------------------
-variable "route_tables" {
-  description = "List of route tables with their configuration and routes."
-  type = list(object({
-    name                          = string
-    bgp_route_propagation_enabled = optional(bool, false)
 
-  }))
-  default = []
-}
-
+##-----------------------------------------------------------------------------
+## Routes
+##-----------------------------------------------------------------------------
 variable "routes" {
-  description = "List of routes to associate with route tables."
   type = list(object({
     name                   = string
     address_prefix         = string
     next_hop_type          = string
     next_hop_in_ip_address = optional(string)
   }))
-  default = []
+  default     = []
+  description = "List of routes to associate with route tables."
 }

@@ -57,11 +57,3 @@ output "nat_gateway_ids" {
   value       = module.subnets.nat_gateway_ids
   description = "Map of NAT Gateway names to their IDs."
 }
-
-##-----------------------------------------------------------------------------
-## Tags
-##-----------------------------------------------------------------------------
-output "tags" {
-  value       = module.subnets.tags
-  description = "Tags applied to the resources."
-}

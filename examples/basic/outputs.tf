@@ -36,11 +36,3 @@ output "resource_group_location" {
   value       = module.resource_group.resource_group_location
   description = "The Azure location of the resource group."
 }
-
-##-----------------------------------------------------------------------------
-## Tags
-##-----------------------------------------------------------------------------
-output "tags" {
-  value       = module.subnets.tags
-  description = "Tags applied to the resources."
-}

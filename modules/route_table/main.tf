@@ -18,7 +18,7 @@ module "labels" {
 ## Route Table – Creates route table with custom routes if required
 ##-----------------------------------------------------------------------------
 resource "azurerm_route_table" "rt" {
-  name                          = var.resource_position_prefix ? "rt-${var.name}" : "${var.name}-rt"
+  name                          = var.resource_position_prefix ? format("rt-%s", module.labels.id) : format("%s-rt", module.labels.id)
   location                      = var.location
   resource_group_name           = var.resource_group_name
   bgp_route_propagation_enabled = var.bgp_route_propagation_enabled

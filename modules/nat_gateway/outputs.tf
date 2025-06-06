@@ -23,4 +23,3 @@ output "nat_gateway_names" {
   value       = azurerm_nat_gateway.natgw.name
   description = "The name of the Azure NAT Gateway resource."
 }
-

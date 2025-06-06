@@ -70,12 +70,10 @@ module "subnets" {
   nat_gateways = [
     {
       name                     = "natgw1"
-      sku_name                 = "Standard"
       nat_gateway_idle_timeout = 10
     },
     {
       name                     = "natgw2"
-      sku_name                 = "Standard"
       nat_gateway_idle_timeout = 10
     }
   ]

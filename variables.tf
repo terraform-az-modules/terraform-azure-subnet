@@ -1,20 +1,4 @@
 ##-----------------------------------------------------------------------------
-## Naming convention
-##-----------------------------------------------------------------------------
-variable "resource_position_prefix" {
-  type        = bool
-  default     = true
-  description = <<EOT
-Controls the placement of the resource type keyword (e.g., "vnet", "ddospp") in the resource name.
-
-- If true, the keyword is prepended: "vnet-core-dev".
-- If false, the keyword is appended: "core-dev-vnet".
-
-This helps maintain naming consistency based on organizational preferences.
-EOT
-}
-
-##-----------------------------------------------------------------------------
 ## Labels
 ##-----------------------------------------------------------------------------
 variable "name" {
@@ -41,7 +25,7 @@ variable "environment" {
 }
 
 variable "label_order" {
-  type        = list(any)
+  type        = list(string)
   default     = ["name", "environment", "location"]
   description = "The order of labels used to construct resource names or tags. If not specified, defaults to ['name', 'environment', 'location']."
 }
@@ -86,7 +70,6 @@ variable "location" {
 ## Subnet
 ##-----------------------------------------------------------------------------
 variable "subnets" {
-  description = "List of subnets to create"
   type = list(object({
     name                          = string
     subnet_prefixes               = list(string)
@@ -107,7 +90,8 @@ variable "subnets" {
       }))
     })), [])
   }))
-  default = []
+  default     = []
+  description = "List of subnets to create"
 }
 
 variable "virtual_network_name" {
@@ -120,14 +104,14 @@ variable "virtual_network_name" {
 ## Nat Gateway
 ##-----------------------------------------------------------------------------
 variable "nat_gateways" {
-  description = "List of NAT Gateways to create"
   type = list(object({
     name                     = string
     sku_name                 = optional(string, "Standard")
     nat_gateway_idle_timeout = optional(number, 4)
     zones                    = optional(list(string), [])
   }))
-  default = []
+  default     = []
+  description = "List of NAT Gateways to create"
 }
 
 variable "enable_nat_gateway" {
@@ -140,7 +124,6 @@ variable "enable_nat_gateway" {
 ## Route Table
 ##-----------------------------------------------------------------------------
 variable "route_tables" {
-  description = "List of route tables with their configuration."
   type = list(object({
     name                          = string
     bgp_route_propagation_enabled = optional(bool, false)
@@ -151,18 +134,8 @@ variable "route_tables" {
       next_hop_in_ip_address = optional(string)
     })), [])
   }))
-  default = []
-}
-
-variable "routes" {
-  description = "List of routes to associate with route tables."
-  type = list(object({
-    name                   = string
-    address_prefix         = string
-    next_hop_type          = string
-    next_hop_in_ip_address = optional(string)
-  }))
-  default = []
+  default     = []
+  description = "List of route tables with their configuration."
 }
 
 variable "enable_route_table" {
