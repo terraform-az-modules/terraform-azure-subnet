@@ -3,11 +3,19 @@ on:
   pull_request:
     branches:
       - master
-    paths:
-      - 'examples/complete/**'
 
 jobs:
 # Update 'Job name' and 'terraform_directory' as needed based on the module structure.
+  basic-example:
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-pr-checks.yaml@master
+    with:
+      provider: 'azurerm'
+      terraform_directory: 'examples/basic'
+      target_branch: 'master'
+    secrets:
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+
   complete-example:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-pr-checks.yaml@master
     with:
@@ -16,4 +24,34 @@ jobs:
       target_branch: 'master'
     secrets:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}    
+
+  nat-gateway-subnet-example:
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-pr-checks.yaml@master
+    with:
+      provider: 'azurerm'
+      terraform_directory: 'examples/subnet_with_nat_gateway'
+      target_branch: 'master'
+    secrets:
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}    
+
+  nsg-subnet-example:
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-pr-checks.yaml@master
+    with:
+      provider: 'azurerm'
+      terraform_directory: 'examples/subnet_with_nsg'
+      target_branch: 'master'
+    secrets:
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}    
+
+  route-table-subnet-example:
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-pr-checks.yaml@master
+    with:
+      provider: 'azurerm'
+      terraform_directory: 'examples/subnet_with_route_table'
+      target_branch: 'master'
+    secrets:
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}    

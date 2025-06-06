@@ -5,13 +5,13 @@
 #
 
 # Name of this project
-name : Terraform Azure Module Template
+name : Terraform Azure Subnet
 
 # License of this project
 license: "APACHE"
 
 # Canonical GitHub repo
-github_repo: terraform-az-modules/terraform-module-template
+github_repo: terraform-az-modules/terraform-azure-subnet
 
 # Badges to display
 badges:
@@ -38,7 +38,7 @@ providers:
 
 #  description of this project
 description: |-
-  Terraform Azure Module Template to create new modules using this as baseline
+  Terraform Azure subnet to create new subnets.
 
 # How to use this project
 # How to use this project
