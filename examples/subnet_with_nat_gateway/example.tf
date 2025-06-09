@@ -40,7 +40,6 @@ module "vnet" {
 ##-----------------------------------------------------------------------------
 module "subnets" {
   source               = "../../"
-  name                 = local.name
   environment          = local.environment
   label_order          = local.label_order
   resource_group_name  = module.resource_group.resource_group_name
