@@ -17,14 +17,6 @@ output "vnet_address_space" {
 }
 
 ##-----------------------------------------------------------------------------
-## Subnet
-##-----------------------------------------------------------------------------
-output "subnet_ids" {
-  value       = module.subnets.subnet_ids
-  description = "Map of subnet names to their IDs."
-}
-
-##-----------------------------------------------------------------------------
 ## Resource Group
 ##-----------------------------------------------------------------------------
 output "resource_group_name" {
@@ -35,4 +27,12 @@ output "resource_group_name" {
 output "resource_group_location" {
   value       = module.resource_group.resource_group_location
   description = "The Azure location of the resource group."
+}
+
+##-----------------------------------------------------------------------------
+## Subnet
+##-----------------------------------------------------------------------------
+output "subnet_ids" {
+  value       = module.subnets.subnet_ids
+  description = "Map of subnet names to their IDs."
 }

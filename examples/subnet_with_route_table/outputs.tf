@@ -36,3 +36,11 @@ output "resource_group_location" {
   value       = module.resource_group.resource_group_location
   description = "The Azure location of the resource group."
 }
+
+##-----------------------------------------------------------------------------
+## Route Table
+##-----------------------------------------------------------------------------
+output "route_table_ids" {
+  value       = module.subnets.route_table_ids
+  description = "Map of route table names to their IDs."
+}
